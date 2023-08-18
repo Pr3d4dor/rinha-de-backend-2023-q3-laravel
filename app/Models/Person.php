@@ -21,6 +21,7 @@ class Person extends Model
         'nickname',
         'date_of_birth',
         'stack',
+        'uuid',
     ];
 
     protected static function booted(): void

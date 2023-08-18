@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\Api;
 
+use Closure;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
 
 class CreatePersonRequest extends FormRequest
@@ -27,10 +29,19 @@ class CreatePersonRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'apelido' => ['required', 'string', 'max:32', 'unique:people,nickname'],
+            'apelido' => [
+                'required',
+                'string',
+                'max:32',
+                function (string $attribute, mixed $value, Closure $fail) {
+                    if (Cache::has('person.' . $value)) {
+                        $fail('Nickname already taken!');
+                    }
+                }
+            ],
             'nome' => ['required', 'string', 'max:100'],
             'nascimento' => ['required', 'date_format:Y-m-d'],
-            'stack' => ['sometimes', 'array'],
+            'stack' => ['sometimes', 'array', 'nullable'],
             'stack.*' => ['string', 'max:32']
         ];
     }

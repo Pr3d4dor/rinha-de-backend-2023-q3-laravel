@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Api\CreatePersonRequest;
 use App\Services\PersonService;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class PersonController extends Controller
 {

@@ -6,6 +6,7 @@ use App\Models\Person;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 
 class PersonControllerTest extends TestCase
@@ -17,6 +18,10 @@ class PersonControllerTest extends TestCase
     public function show_behaves_as_expected(): void
     {
         $person = Person::factory()->create();
+
+        $personCacheData = json_encode($person->toArray());
+
+        Cache::set('person.' . $person['uuid'], $personCacheData, now()->addDay());
 
         $response = $this->getJson('/pessoas/' . $person['uuid']);
 
@@ -58,6 +63,7 @@ class PersonControllerTest extends TestCase
         $response->assertCreated();
         $response->assertJson($data);
         $response->assertHeader('Location', sprintf('/pessoas/' . $response->json('id')));
+        $this->assertTrue(Cache::has('person.' . $response->json('id')));
     }
 
     /**
@@ -85,9 +91,13 @@ class PersonControllerTest extends TestCase
             ],
         ];
 
-        Person::factory()->create([
+        $person = Person::factory()->create([
             'nickname' => $data['apelido'],
         ]);
+
+        $personCacheData = json_encode($person->toArray());
+
+        Cache::set('person.' . $person['nickname'], $personCacheData, now()->addDay());
 
         $response = $this->postJson('/pessoas', $data);
 
