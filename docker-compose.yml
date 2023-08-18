@@ -17,8 +17,6 @@ services:
       REDIS_CLIENT: phpredis
       REDIS_HOST: cache
       REDIS_PORT: 6379
-      QUEUE_CONNECTION: redis
-      QUEUE_FAILED_DRIVER: 'null'
     depends_on:
       - db
       - cache
@@ -27,8 +25,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.25'
-          memory: '0.5GB'
+          cpus: '0.375'
+          memory: '0.9GB'
 
   api2: # API - Instância 02
     build:
@@ -46,8 +44,6 @@ services:
       REDIS_CLIENT: phpredis
       REDIS_HOST: cache
       REDIS_PORT: 6379
-      QUEUE_CONNECTION: redis
-      QUEUE_FAILED_DRIVER: 'null'
     depends_on:
       - db
       - cache
@@ -56,8 +52,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.25'
-          memory: '0.5GB'
+          cpus: '0.375'
+          memory: '0.9GB'
 
   nginx: # Load Balancer
     image: nginx:latest
@@ -71,11 +67,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.25'
-          memory: '0.5GB'
+          cpus: '0.05'
+          memory: '0.1GB'
 
   db: # Banco de dados
-    image: mysql:8.0
+    image: mysql:8.1
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_USER: rinha
@@ -89,14 +85,14 @@ services:
         resources:
           limits:
             cpus: '0.9'
-            memory: '1.4GB'
+            memory: '1.0GB'
 
   cache: # Cache
     image: redis:7.2
     deploy:
       resources:
         limits:
-          cpus: "0.1"
+          cpus: "0.05"
           memory: "0.1GB"
 
 networks:

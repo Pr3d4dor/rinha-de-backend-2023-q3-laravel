@@ -13,9 +13,9 @@ COPY ./.build/repositories /etc/apk/repositories
 COPY ./.build/supervisord.conf /etc/supervisord.conf
 
 RUN apk update && apk upgrade --no-cache --no-progress && apk add \
-    php82 php82-fpm php82-bcmath php82-bz2 php82-calendar php82-cgi php82-common php82-ctype \
+    php82 php82-bcmath php82-bz2 php82-calendar php82-cgi php82-common php82-ctype \
     php82-curl php82-dba php82-dev php82-doc php82-dom php82-embed \
-    php82-enchant php82-exif php82-fileinfo php82-fpm php82-ftp php82-gd \
+    php82-enchant php82-exif php82-fileinfo php82-ftp php82-gd \
     php82-gettext php82-gmp php82-iconv php82-imap php82-intl php82-json \
     php82-ldap php82-litespeed php82-mbstring php82-mysqli php82-mysqlnd \
     php82-odbc php82-opcache php82-openssl php82-pcntl php82-pdo php82-pdo_dblib \
@@ -30,19 +30,16 @@ RUN apk update && apk upgrade --no-cache --no-progress && apk add \
     php82-pecl-ast php82-pecl-redis php82-pecl-apcu \
     php82-pecl-msgpack php82-pecl-yaml php82-brotli php82-pecl-amqp \
     php82-pecl-igbinary php82-pecl-lzf php82-pecl-swoole \
-    py3-pip curl tzdata libjpeg-turbo-dev libjpeg-turbo oniguruma oniguruma-dev icu-data-full nginx nginx-mod-http-headers-more zip libcap git \
+    py3-pip curl tzdata libjpeg-turbo-dev libjpeg-turbo oniguruma oniguruma-dev icu-data-full zip libcap git \
     --no-cache --no-progress && \
     \
     ln -s /usr/bin/php82 /usr/bin/php && \
-    \
-    ln -s /usr/sbin/php-fpm82 /usr/bin/php-fpm && \
     \
     ln -s /usr/bin/pecl82 /usr/bin/pecl && \
     \
     PHP_VERSION=$(php -r 'echo PHP_VERSION;') && \
     curl https://raw.githubusercontent.com/php/php-src/php-${PHP_VERSION}/php.ini-production --output php.ini-production && \
-    curl https://raw.githubusercontent.com/php/php-src/php-${PHP_VERSION}/php.ini-development --output php.ini-development && \
-    mv php.ini-production /etc/php82 && mv php.ini-development /etc/php82 && \
+    mv php.ini-production /etc/php82 && \
     \
     cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
     \
@@ -50,9 +47,7 @@ RUN apk update && apk upgrade --no-cache --no-progress && apk add \
     \
     pip install supervisor -q && \
     \
-    mkdir -p /run/nginx ${SUPERV} && \
-    \
-    setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx && \
+    mkdir -p ${SUPERV} && \
     \
     addgroup -g 1000 ${GROUP} && \
     adduser -G ${GROUP} -H -D -s /sbin/nologin -u 1000 ${USER} && \
