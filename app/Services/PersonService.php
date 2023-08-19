@@ -39,7 +39,9 @@ class PersonService
         Cache::set('person.' . $person['uuid'], $personCacheData, now()->addDay());
         Cache::set('person.' . $person['nickname'], $personCacheData, now()->addDay());
 
-        Person::query()->create($formattedData);
+        dispatch(function () use ($formattedData) {
+            Person::query()->create($formattedData);
+        });
 
         return $person;
     }

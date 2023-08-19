@@ -17,6 +17,8 @@ services:
       REDIS_CLIENT: phpredis
       REDIS_HOST: cache
       REDIS_PORT: 6379
+      QUEUE_CONNECTION: redis
+      QUEUE_FAILED_DRIVER: 'null'
     depends_on:
       - db
       - cache
@@ -44,6 +46,8 @@ services:
       REDIS_CLIENT: phpredis
       REDIS_HOST: cache
       REDIS_PORT: 6379
+      QUEUE_CONNECTION: redis
+      QUEUE_FAILED_DRIVER: 'null'
     depends_on:
       - db
       - cache
