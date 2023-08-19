@@ -71,21 +71,22 @@ services:
           memory: '0.1GB'
 
   db: # Banco de dados
-    image: mysql:8.1
-    command: --default-authentication-plugin=mysql_native_password
+    image: postgres
+    hostname: db
     environment:
-      MYSQL_USER: rinha
-      MYSQL_ROOT_PASSWORD: rinha
-      MYSQL_DATABASE: rinha
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rinha
+      POSTGRES_DB: rinha
+    command: postgres -c shared_buffers=256MB
     volumes:
-      - ./migrations.sql:/docker-entrypoint-initdb.d/migrations.sql
+      - ./migrations.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "3306:3306"
+      - 5432:5432
     deploy:
-        resources:
-          limits:
-            cpus: '0.9'
-            memory: '1.0GB'
+      resources:
+        limits:
+          cpus: '0.65'
+          memory: '1.0GB'
 
   cache: # Cache
     image: redis:7.2

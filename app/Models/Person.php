@@ -11,6 +11,10 @@ class Person extends Model
 
     public $timestamps = false;
 
+    public $incrementing = false;
+
+    protected $primaryKey = null;
+
     protected $casts = [
         'stack' => 'array',
         'date_of_birth' => 'date'
